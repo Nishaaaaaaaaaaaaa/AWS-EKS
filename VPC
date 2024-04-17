@@ -1,0 +1,11 @@
+AWS EKS
+VPC has 4 steps
+1 Create a VPC
+2 Create Subnet
+3 Internet Gateway
+4 Route Tables
+CIDR- Classless Inter Dpmain Routing
+Subnet is VPC
+VPC- Virtual Private Cloud
+So whenever we create a VPC automatically DHCP, NACL & SECURITY GRP will be created with the VPC.
+VPC is always created in a region not created in AZ. 
