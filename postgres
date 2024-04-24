@@ -1,0 +1,319 @@
+postgres
+
+
+
+iske like u need csi drivers
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-04-24T11:37:44Z"
+  generateName: postgres-5d48b7ff77-
+  labels:
+    app: postgres
+    pod-template-hash: 5d48b7ff77
+  name: postgres-5d48b7ff77-sr9vq
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: postgres-5d48b7ff77
+    uid: b53f9fb5-eb1e-4290-9f19-5e62302757c0
+  resourceVersion: "77002"
+  uid: eacfda2c-72d3-4a4a-ac06-c3176f024ff9
+spec:
+  containers:
+  - envFrom:
+    - configMapRef:
+        name: postgres-secret
+    image: postgres:14
+    imagePullPolicy: IfNotPresent
+    name: postgres
+    ports:
+    - containerPort: 5432
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: postgresdata
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-v26rx
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  initContainers:
+  - command:
+    - sh
+    - -c
+    - rm -rf /var/lib/postgresql/data/* || true
+    image: busybox:latest
+    imagePullPolicy: Always
+    name: init-postgres
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/lib/postgresql/data
+      name: postgresdata
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-v26rx
+      readOnly: true
+  nodeName: ip-10-0-15-155.us-east-2.compute.internal
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: postgresdata
+    persistentVolumeClaim:
+      claimName: postgres-volume-claim
+  - name: kube-api-access-v26rx
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T11:37:55Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T11:37:55Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T11:37:56Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T11:37:56Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T11:37:44Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://942559037e427fbf2354d5ac015adde254dd477ba5c7f3995cfb4c44ff808d00
+    image: docker.io/library/postgres:14
+    imageID: docker.io/library/postgres@sha256:28284d06a5259e81df0f243570d7acad04589ed0cd33f9c1e4f5808ab8864c33
+    lastState: {}
+    name: postgres
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-04-24T11:37:55Z"
+  hostIP: 10.0.15.155
+  hostIPs:
+  - ip: 10.0.15.155
+  initContainerStatuses:
+  - containerID: containerd://4a1a3e0a2a8fb2735956f20119c2200bb02ae42c6a82907a9e52b7b91b75e8b7
+    image: docker.io/library/busybox:latest
+    imageID: docker.io/library/busybox@sha256:c3839dd800b9eb7603340509769c43e146a74c63dca3045a8e7dc8ee07e53966
+    lastState: {}
+    name: init-postgres
+    ready: true
+    restartCount: 0
+    started: false
+    state:
+      terminated:
+        containerID: containerd://4a1a3e0a2a8fb2735956f20119c2200bb02ae42c6a82907a9e52b7b91b75e8b7
+        exitCode: 0
+        finishedAt: "2024-04-24T11:37:54Z"
+        reason: Completed
+        startedAt: "2024-04-24T11:37:54Z"
+  phase: Running
+  podIP: 10.0.14.165
+  podIPs:
+  - ip: 10.0.14.165
+  qosClass: BestEffort
+  startTime: "2024-04-24T11:37:44Z"
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: 'postgres:14'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdata
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim
+
+
+
+
+
+
+
+
+
+
+
+pvc
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"postgres-volume-claim","namespace":"default"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Gi"}},"storageClassName":"ebs-storage-class"}}
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: ebs.csi.aws.com
+    volume.kubernetes.io/storage-provisioner: ebs.csi.aws.com
+  creationTimestamp: "2024-04-24T10:47:14Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: postgres-volume-claim
+  namespace: default
+  resourceVersion: "63332"
+  uid: fdcafdd1-65c0-479f-8998-e486a55c8ecb
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ebs-storage-class
+  volumeMode: Filesystem
+  volumeName: pvc-fdcafdd1-65c0-479f-8998-e486a55c8ecb
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  phase: Bound
+
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim
+spec:
+  storageClassName: ebs-storage-class
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+
+
+
+
+
+
+
+
+
+storage
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"storage.k8s.io/v1","kind":"StorageClass","metadata":{"annotations":{},"name":"ebs-storage-class"},"parameters":{"encrypted":"true","type":"gp2","zones":"us-east-2a,us-west-1b"},"provisioner":"kubernetes.io/aws-ebs"}
+  creationTimestamp: "2024-04-24T10:47:06Z"
+  name: ebs-storage-class
+  resourceVersion: "63264"
+  uid: 76ab964e-a406-47fe-8631-c325062aa9ec
+parameters:
+  encrypted: "true"
+  type: gp2
+  zones: us-east-2a,us-west-1b
+provisioner: kubernetes.io/aws-ebs
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+
+
+
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-storage-class
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+  encrypted: "true" # Specify if encryption is enabled
+  zones: us-east-2a,us-west-1b # Specify availability zones if needed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
