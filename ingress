@@ -1,0 +1,316 @@
+pod 
+kubectl get pod us-b8ffdcb47-b8zl4 -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2024-04-24T16:18:45Z"
+  generateName: us-b8ffdcb47-
+  labels:
+    app: us
+    pod-template-hash: b8ffdcb47
+  name: us-b8ffdcb47-b8zl4
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: us-b8ffdcb47
+    uid: 95de161d-4d60-4c59-8b8f-7f8d57115e19
+  resourceVersion: "152312"
+  uid: eb01b6be-2656-4d4b-802f-1c35067c03b4
+spec:
+  containers:
+  - image: 637423250629.dkr.ecr.us-east-1.amazonaws.com/umashankar:g1
+    imagePullPolicy: Always
+    name: nginx
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-l87tm
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: ip-10-0-152-160.us-east-2.compute.internal
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-l87tm
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T16:18:47Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T16:18:45Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T16:18:47Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T16:18:47Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-04-24T16:18:45Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://c50224fd986072557ed61f46c7871fce1d5785fcf40c30934be5e894a65ed3bd
+    image: 637423250629.dkr.ecr.us-east-1.amazonaws.com/umashankar:g1
+    imageID: 637423250629.dkr.ecr.us-east-1.amazonaws.com/umashankar@sha256:9481ebf7731bfa6ec784b1089971536388817a218f42abd66e42355d098fbc2d
+    lastState: {}
+    name: nginx
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-04-24T16:18:46Z"
+  hostIP: 10.0.152.160
+  hostIPs:
+  - ip: 10.0.152.160
+  phase: Running
+  podIP: 10.0.146.255
+  podIPs:
+  - ip: 10.0.146.255
+  qosClass: BestEffort
+  startTime: "2024-04-24T16:18:45Z"
+
+
+
+
+
+
+
+
+
+ingress
+kubectl get ingress us-in -o yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:637423250629:certificate/97f604ab-f725-47b4-9b03-0e4ebe630114
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-0221525896bba0913, subnet-074d3499b7c8724b9
+    alb.ingress.kubernetes.io/target-type: ip
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"alb.ingress.kubernetes.io/certificate-arn":"arn:aws:acm:us-east-2:637423250629:certificate/97f604ab-f725-47b4-9b03-0e4ebe630114","alb.ingress.kubernetes.io/listen-ports":"[{\"HTTP\": 80}, {\"HTTPS\": 443}]","alb.ingress.kubernetes.io/scheme":"internet-facing","alb.ingress.kubernetes.io/subnets":"subnet-0221525896bba0913, subnet-074d3499b7c8724b9","alb.ingress.kubernetes.io/target-type":"ip"},"name":"us-in","namespace":"default"},"spec":{"ingressClassName":"alb","rules":[{"http":{"paths":[{"backend":{"service":{"name":"us","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}]}}
+  creationTimestamp: "2024-04-24T15:58:51Z"
+  finalizers:
+  - ingress.k8s.aws/resources
+  generation: 1
+  name: us-in
+  namespace: default
+  resourceVersion: "146825"
+  uid: f404f8c1-b0f4-49ec-80d9-1a4bc4d28834
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: us
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - hostname: k8s-default-usin-d610550239-1420497596.us-east-2.elb.amazonaws.com
+    
+    
+    
+    
+    lb yaml
+     kubectl get deploy -n kube-system aws-load-balancer-controller -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"aws-load-balancer-controller"},"name":"aws-load-balancer-controller","namespace":"kube-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"aws-load-balancer-controller"}},"template":{"metadata":{"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/name":"aws-load-balancer-controller"}},"spec":{"containers":[{"args":["--cluster-name=my-cluster","--ingress-class=alb"],"image":"amazon/aws-alb-ingress-controller:v2.4.2","livenessProbe":{"failureThreshold":2,"httpGet":{"path":"/healthz","port":61779,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":10},"name":"controller","ports":[{"containerPort":9443,"name":"webhook-server","protocol":"TCP"}],"resources":{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"200Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsNonRoot":true},"volumeMounts":[{"mountPath":"/tmp/k8s-webhook-server/serving-certs","name":"cert","readOnly":true}]}],"priorityClassName":"system-cluster-critical","securityContext":{"fsGroup":1337},"serviceAccountName":"aws-load-balancer-controller","terminationGracePeriodSeconds":10,"volumes":[{"name":"cert","secret":{"defaultMode":420,"secretName":"aws-load-balancer-webhook-tls"}}]}}}}
+  creationTimestamp: "2024-04-24T11:11:57Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/name: aws-load-balancer-controller
+  name: aws-load-balancer-controller
+  namespace: kube-system
+  resourceVersion: "69697"
+  uid: c1d1d736-d28d-4a99-8dfd-f77af26ed5f6
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: aws-load-balancer-controller
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/name: aws-load-balancer-controller
+    spec:
+      containers:
+      - args:
+        - --cluster-name=my-cluster
+        - --ingress-class=alb
+        image: amazon/aws-alb-ingress-controller:v2.4.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /healthz
+            port: 61779
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: controller
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      priorityClassName: system-cluster-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        fsGroup: 1337
+      serviceAccount: aws-load-balancer-controller
+      serviceAccountName: aws-load-balancer-controller
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: aws-load-balancer-webhook-tls
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2024-04-24T11:11:59Z"
+    lastUpdateTime: "2024-04-24T11:11:59Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2024-04-24T11:11:57Z"
+    lastUpdateTime: "2024-04-24T11:11:59Z"
+    message: ReplicaSet "aws-load-balancer-controller-76989f7cc5" has successfully
+      progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
+
+
+
+and cert manager file also
+
+
+
+svc yaml
+kubectl get svc us -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2024-04-24T15:55:41Z"
+  labels:
+    app: us
+  name: us
+  namespace: default
+  resourceVersion: "145960"
+  uid: 303fa19f-2176-4694-8372-03ce8a69569a
+spec:
+  clusterIP: 172.20.62.0
+  clusterIPs:
+  - 172.20.62.0
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: us
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+
+
+
